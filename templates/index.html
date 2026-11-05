@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{ app_meta.title }}</title>
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50: '#eef2ff',
+              100: '#e0e7ff',
+              500: '#6366f1',
+              600: '#4f46e5',
+              700: '#4338ca',
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Google Fonts & Bootstrap Icons -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<body class="bg-[#0a0e17] text-gray-100 flex flex-col min-h-screen selection:bg-indigo-500 selection:text-white">
+
+  <!-- Background Decorative Glows -->
+  <div class="fixed top-0 left-1/4 w-96 h-96 bg-indigo-600/10 rounded-full blur-3xl pointer-events-none -z-10"></div>
+  <div class="fixed bottom-10 right-1/4 w-96 h-96 bg-purple-600/10 rounded-full blur-3xl pointer-events-none -z-10"></div>
+
+  <!-- Navigation Bar -->
+  <header class="border-b border-gray-800/80 bg-[#0d1322]/80 backdrop-blur-md sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+      
+      <!-- Brand Logo -->
+      <a href="{{ url_for('index') }}" class="flex items-center gap-3 group">
+        <div class="w-11 h-11 rounded-xl bg-gradient-to-tr from-indigo-600 via-purple-600 to-pink-500 flex items-center justify-center shadow-lg shadow-indigo-500/25 group-hover:scale-105 transition-transform">
+          <i class="bi bi-file-earmark-person-fill text-2xl text-white"></i>
+        </div>
+        <div>
+          <span class="text-xl font-bold tracking-tight text-white flex items-center gap-2">
+            SkillSync <span class="gradient-text font-extrabold">AI</span>
+            <span class="text-xs px-2 py-0.5 rounded-full bg-indigo-950 text-indigo-300 border border-indigo-800 font-mono">v{{ app_meta.version }}</span>
+          </span>
+          <p class="text-xs text-gray-400">Intelligent Resume Screening & Match Engine</p>
+        </div>
+      </a>
+
+      <!-- Developer Credit Badge in Header -->
+      <div class="flex items-center gap-3">
+        <div class="brand-badge hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-medium text-purple-200">
+          <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+          <span>Developed by <strong class="text-white font-semibold">DHARMIK MTH</strong></span>
+        </div>
+        <a href="https://github.com" target="_blank" class="p-2 text-gray-400 hover:text-white hover:bg-gray-800/60 rounded-lg transition-colors" title="GitHub Source">
+          <i class="bi bi-github text-lg"></i>
+        </a>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 w-full">
+
+    <!-- Flash Messages -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <div class="mb-8 space-y-2">
+          {% for category, message in messages %}
+            <div class="p-4 rounded-xl flex items-center justify-between border {% if category == 'error' %}bg-rose-950/40 border-rose-800 text-rose-200{% else %}bg-emerald-950/40 border-emerald-800 text-emerald-200{% endif %}">
+              <div class="flex items-center gap-3">
+                <i class="bi {% if category == 'error' %}bi-exclamation-triangle-fill text-rose-400{% else %}bi-check-circle-fill text-emerald-400{% endif %} text-lg"></i>
+                <p class="text-sm font-medium">{{ message }}</p>
+              </div>
+              <button onclick="this.parentElement.remove()" class="text-gray-400 hover:text-white"><i class="bi bi-x-lg"></i></button>
+            </div>
+          {% endfor %}
+        </div>
+      {% endif %}
+    {% endwith %}
+
+    <!-- Hero Title -->
+    <div class="text-center max-w-3xl mx-auto mb-10">
+      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 text-xs font-semibold uppercase tracking-wider mb-4">
+        <i class="bi bi-cpu-fill"></i> Powered by Scikit-Learn • TF-IDF • PyPDF • NLP
+      </div>
+      <h1 class="text-4xl sm:text-5xl font-extrabold tracking-tight text-white mb-4">
+        AI-Powered <span class="gradient-text">Resume Screening</span> & Job Fit Analysis
+      </h1>
+      <p class="text-gray-400 text-base sm:text-lg leading-relaxed">
+        Upload any candidate PDF resume and match it against your Job Description. Our machine learning engine predicts job category, computes TF-IDF similarity, extracts skills, and highlights critical ATS gaps.
+      </p>
+    </div>
+
+    <!-- 1-Click Quick Demo Presets -->
+    <div class="glass-panel rounded-2xl p-4 sm:p-5 mb-8 border border-gray-800">
+      <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+        <div class="flex items-center gap-2 text-sm text-gray-300">
+          <i class="bi bi-lightning-charge-fill text-amber-400 text-lg"></i>
+          <span class="font-semibold text-white">Instant 1-Click Demos:</span>
+          <span class="text-xs text-gray-400 hidden md:inline">Test the full pipeline without uploading a file:</span>
+        </div>
+        <div class="flex flex-wrap items-center gap-2 w-full sm:w-auto">
+          <button type="button" data-preset="data_science" class="px-3.5 py-1.5 rounded-lg bg-gray-800 hover:bg-indigo-600/40 border border-gray-700 hover:border-indigo-500/60 text-xs font-medium text-gray-200 transition-all flex items-center gap-1.5">
+            <i class="bi bi-bar-chart-steps text-indigo-400"></i> Senior Data Scientist
+          </button>
+          <button type="button" data-preset="python_dev" class="px-3.5 py-1.5 rounded-lg bg-gray-800 hover:bg-indigo-600/40 border border-gray-700 hover:border-indigo-500/60 text-xs font-medium text-gray-200 transition-all flex items-center gap-1.5">
+            <i class="bi bi-code-slash text-purple-400"></i> Python Full Stack
+          </button>
+          <button type="button" data-preset="devops_engineer" class="px-3.5 py-1.5 rounded-lg bg-gray-800 hover:bg-indigo-600/40 border border-gray-700 hover:border-indigo-500/60 text-xs font-medium text-gray-200 transition-all flex items-center gap-1.5">
+            <i class="bi bi-cloud-check-fill text-emerald-400"></i> DevOps & Cloud
+          </button>
+        </div>
+      </div>
+      <div id="preset-toast" class="hidden mt-3 text-xs text-emerald-400 flex items-center gap-2">
+        <i class="bi bi-check2-circle"></i> <span></span>
+      </div>
+    </div>
+
+    <!-- Screening Input Form -->
+    <form id="screening-form" action="{{ url_for('analyze') }}" method="POST" enctype="multipart/form-data">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+
+        <!-- Column 1: Resume Input -->
+        <div class="glass-panel rounded-2xl p-6 flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between mb-4">
+              <label class="text-lg font-bold text-white flex items-center gap-2">
+                <i class="bi bi-file-earmark-arrow-up text-indigo-400"></i>
+                Candidate Resume
+              </label>
+
+              <!-- Tabs: File Upload vs Text Paste -->
+              <div class="flex items-center bg-gray-900/90 p-1 rounded-xl border border-gray-800 text-xs font-medium">
+                <button type="button" id="tab-btn-upload" class="px-3 py-1 rounded-lg bg-indigo-600 text-white transition-all">
+                  <i class="bi bi-file-pdf"></i> PDF Upload
+                </button>
+                <button type="button" id="tab-btn-text" class="px-3 py-1 rounded-lg text-gray-400 hover:text-white transition-all">
+                  <i class="bi bi-textarea-t"></i> Paste Text
+                </button>
+              </div>
+            </div>
+
+            <!-- Tab 1: PDF Upload Dropzone -->
+            <div id="tab-pane-upload" class="space-y-4">
+              <div id="dropzone" class="dropzone-border rounded-xl p-8 text-center cursor-pointer bg-gray-900/40">
+                <input type="file" name="resume_file" id="resume_file" accept=".pdf,.txt" class="hidden">
+                
+                <div id="dropzone-placeholder" class="space-y-3">
+                  <div class="w-16 h-16 mx-auto rounded-2xl bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center text-indigo-400 text-3xl">
+                    <i class="bi bi-cloud-arrow-up"></i>
+                  </div>
+                  <div>
+                    <p class="text-sm font-semibold text-white">Click to upload or drag & drop</p>
+                    <p class="text-xs text-gray-400 mt-1">PDF or TXT documents (Max 16 MB)</p>
+                  </div>
+                  <span class="inline-block text-xs font-medium text-indigo-400 bg-indigo-950/60 border border-indigo-800 px-3 py-1 rounded-full">
+                    Extracted via pypdf / PyPDF2
+                  </span>
+                </div>
+
+                <!-- File Preview Selected State -->
+                <div id="file-preview" class="hidden text-left bg-gray-800/80 p-4 rounded-xl border border-gray-700 flex items-center justify-between">
+                  <div class="flex items-center gap-3 overflow-hidden">
+                    <div class="w-10 h-10 rounded-lg bg-rose-500/20 text-rose-400 flex items-center justify-center text-xl shrink-0">
+                      <i class="bi bi-file-earmark-pdf"></i>
+                    </div>
+                    <div class="truncate">
+                      <p id="file-name-display" class="text-sm font-medium text-white truncate">resume.pdf</p>
+                      <p id="file-size-display" class="text-xs text-gray-400">1.2 MB</p>
+                    </div>
+                  </div>
+                  <button type="button" id="remove-file-btn" class="p-2 text-gray-400 hover:text-rose-400 transition-colors" title="Remove file">
+                    <i class="bi bi-trash3"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Tab 2: Direct Resume Text Input -->
+            <div id="tab-pane-text" class="hidden space-y-2">
+              <textarea name="resume_text" id="resume_text" rows="12" placeholder="Paste the candidate's complete resume text here (including Work Experience, Skills, Education, Projects)..." class="w-full bg-gray-900/70 border border-gray-700/80 rounded-xl p-4 text-sm text-gray-200 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent font-sans"></textarea>
+            </div>
+          </div>
+
+          <div class="mt-4 pt-4 border-t border-gray-800/80 text-xs text-gray-400 flex items-center justify-between">
+            <span class="flex items-center gap-1.5"><i class="bi bi-shield-check text-emerald-400"></i> Secure parsing</span>
+            <span class="text-gray-500">Auto-detects contact, skills & exp</span>
+          </div>
+        </div>
+
+        <!-- Column 2: Job Description Input -->
+        <div class="glass-panel rounded-2xl p-6 flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between mb-4">
+              <label for="job_description" class="text-lg font-bold text-white flex items-center gap-2">
+                <i class="bi bi-briefcase text-purple-400"></i>
+                Target Job Description (JD)
+              </label>
+              <button type="button" onclick="document.getElementById('job_description').value=''" class="text-xs text-gray-400 hover:text-rose-400 transition-colors">
+                <i class="bi bi-arrow-counterclockwise"></i> Clear
+              </button>
+            </div>
+
+            <textarea name="job_description" id="job_description" rows="12" required placeholder="Paste the target Job Description here (Role summary, required skills, tools, qualifications, experience)..." class="w-full bg-gray-900/70 border border-gray-700/80 rounded-xl p-4 text-sm text-gray-200 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent font-sans"></textarea>
+          </div>
+
+          <div class="mt-4 pt-4 border-t border-gray-800/80 text-xs text-gray-400 flex items-center justify-between">
+            <span class="flex items-center gap-1.5"><i class="bi bi-lightning-charge text-amber-400"></i> TF-IDF Cosine Similarity</span>
+            <span class="text-gray-500">Compares n-grams & keyword semantics</span>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Action Button -->
+      <div class="text-center">
+        <button type="submit" id="submit-btn" class="inline-flex items-center gap-3 px-8 py-4 rounded-xl font-bold text-white text-base bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 hover:from-indigo-500 hover:via-purple-500 hover:to-pink-500 shadow-xl shadow-indigo-600/30 hover:shadow-indigo-600/50 hover:scale-[1.02] active:scale-[0.98] transition-all cursor-pointer">
+          <i class="bi bi-stars text-xl"></i>
+          <span id="submit-btn-text">Run AI Screening & Matching</span>
+          <svg id="submit-btn-spinner" class="hidden animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+          </svg>
+        </button>
+        <p class="text-xs text-gray-500 mt-3">Processes text instantaneously using pre-warmed ML inference pipeline</p>
+      </div>
+    </form>
+
+    <!-- Architecture & Features Showcase -->
+    <div class="mt-16 pt-12 border-t border-gray-800">
+      <div class="text-center mb-8">
+        <h2 class="text-xl font-bold text-white">System Architecture & Capabilities</h2>
+        <p class="text-xs text-gray-400 mt-1">Multi-stage pipeline engineering by <strong class="text-gray-300">DHARMIK MTH</strong></p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <!-- Feature 1 -->
+        <div class="glass-panel rounded-xl p-5 border border-gray-800">
+          <div class="w-10 h-10 rounded-lg bg-indigo-500/10 text-indigo-400 flex items-center justify-center text-xl mb-3">
+            <i class="bi bi-file-earmark-pdf"></i>
+          </div>
+          <h3 class="text-sm font-semibold text-white mb-1">PDF Text Extraction</h3>
+          <p class="text-xs text-gray-400 leading-relaxed">
+            Extracts raw text page-by-page via <code class="text-indigo-300">pypdf</code> with Unicode normalization and layout preservation.
+          </p>
+        </div>
+
+        <!-- Feature 2 -->
+        <div class="glass-panel rounded-xl p-5 border border-gray-800">
+          <div class="w-10 h-10 rounded-lg bg-purple-500/10 text-purple-400 flex items-center justify-center text-xl mb-3">
+            <i class="bi bi-diagram-3"></i>
+          </div>
+          <h3 class="text-sm font-semibold text-white mb-1">Scikit-Learn Classifier</h3>
+          <p class="text-xs text-gray-400 leading-relaxed">
+            Trained on Kaggle resume dataset across 25 job domains achieving <strong class="text-purple-300">98.9% test accuracy</strong> with confidence scoring.
+          </p>
+        </div>
+
+        <!-- Feature 3 -->
+        <div class="glass-panel rounded-xl p-5 border border-gray-800">
+          <div class="w-10 h-10 rounded-lg bg-pink-500/10 text-pink-400 flex items-center justify-center text-xl mb-3">
+            <i class="bi bi-percent"></i>
+          </div>
+          <h3 class="text-sm font-semibold text-white mb-1">TF-IDF Cosine Match</h3>
+          <p class="text-xs text-gray-400 leading-relaxed">
+            Unigram and bigram TF-IDF vectors paired with Cosine Similarity for nuanced semantic & keyword alignment measurement.
+          </p>
+        </div>
+
+        <!-- Feature 4 -->
+        <div class="glass-panel rounded-xl p-5 border border-gray-800">
+          <div class="w-10 h-10 rounded-lg bg-emerald-500/10 text-emerald-400 flex items-center justify-center text-xl mb-3">
+            <i class="bi bi-check2-circle"></i>
+          </div>
+          <h3 class="text-sm font-semibold text-white mb-1">Actionable ATS Gap Analysis</h3>
+          <p class="text-xs text-gray-400 leading-relaxed">
+            Highlights missing technical skills, metrics quantification, strong action verbs, and actionable resume optimization tips.
+          </p>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- Dedicated Developer Footer -->
+  <footer class="border-t border-gray-800/80 bg-[#090d16] py-10 mt-12">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex flex-col md:flex-row items-center justify-between gap-6">
+        
+        <div class="flex items-center gap-3">
+          <div class="w-9 h-9 rounded-lg bg-gradient-to-tr from-indigo-600 to-purple-600 flex items-center justify-center text-white font-bold text-sm">
+            DM
+          </div>
+          <div>
+            <p class="text-sm font-bold text-white">SkillSync AI</p>
+            <p class="text-xs text-gray-400">Production-Ready Resume Screening & Job Matching Platform</p>
+          </div>
+        </div>
+
+        <!-- Branded Credits Banner -->
+        <div class="text-center md:text-right">
+          <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-purple-950/60 border border-purple-800/80 text-xs font-semibold text-purple-200 shadow-sm">
+            <i class="bi bi-code-slash text-pink-400"></i>
+            <span>Engineered & Developed by <span class="text-white font-bold underline decoration-pink-500 underline-offset-2">DHARMIK MTH</span></span>
+          </div>
+          <p class="text-xs text-gray-500 mt-2">Python 3 • Flask • Scikit-learn • TF-IDF • PyPDF2 • Tailwind CSS</p>
+        </div>
+
+      </div>
+
+      <div class="mt-8 pt-6 border-t border-gray-800/60 text-center text-xs text-gray-500">
+        &copy; {{ app_meta.year }} SkillSync AI. All rights reserved. Created with passion by <strong>DHARMIK MTH</strong>.
+      </div>
+    </div>
+  </footer>
+
+  <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>
